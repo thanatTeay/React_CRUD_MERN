@@ -5,12 +5,12 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    quantity:{
-        type: Number,
+    price:{
+        type: String,
         required: true,
     },
-    price:{
-        type: Number,
+    quantity:{
+        type: String,
         required: true,
     },
 })

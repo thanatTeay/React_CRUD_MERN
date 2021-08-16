@@ -1,10 +1,15 @@
 const express = require('express');
+const router = express.Router();
 const mongoose = require('mongoose');
+const cors = require('cors');
 const app = express()
 
 const ProductsModel = require('./model/Products')
+const FindAll = require('./model/FindData')
 
+app.use(cors())
 app.use(express.json());
+
 
 
 /*mongoose.connect("mongodb+srv://Thanat2208:thegame901@crud.qooys.mongodb.net/Products?retryWrites=true&w=majority", {
@@ -22,11 +27,15 @@ mongoose.connection.on('error', function(err) {
 
 
 
-app.get('/', async (req,res) => {
+app.post('/create', async (req,res) => {
+    const productName = req.body.productName
+    const price = req.body.price
+    const quatity = req.body.quatity
+
     const product = new ProductsModel({
-        productName: "umbrella",
-        quantity: 10,
-        price: 110
+        productName: productName,
+        quantity: price,
+        price: quatity
     })
     try{
         await product.save();
@@ -35,6 +44,7 @@ app.get('/', async (req,res) => {
         console.log(err)
     }
 })
+
 
 app.listen(3001, () => 
 {

@@ -59,6 +59,34 @@ app.get('/findproduct',async (req,res) => {
 })
 
 
+app.put('/updateproduct', async (req,res) => {
+    const id = req.body.id
+    const productName = req.body.productName
+    const price = req.body.price
+    const quatity = req.body.quatity
+
+    try{
+        await ProductsModel.findById(id, (err, updateProduct) =>{
+            updateProduct.productName = productName,
+            updateProduct.price = price,
+            updateProduct.quantity = quatity
+
+            updateProduct.save()
+            res.send("update")
+        })
+    }catch(err){
+        console.log(err)
+    }
+})
+
+app.delete("/delete/:id", async(req,res)=>{
+    const id = req.params.id
+
+    await ProductsModel.findByIdAndRemove(id).exec()
+    res.send("Delete!!!")
+})
+
+
 app.listen(process.env.DB_PORT, () => 
 {
     console.log("Server running on port ", process.env.DB_PORT)

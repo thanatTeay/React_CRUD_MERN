@@ -9,7 +9,7 @@ function App() {
   const [productName, setProductName] = useState("")
   const [price, setPrice] = useState(0)
   const [quatity, setQuatity] = useState("")
- 
+
 
   const addProduct = () => {
     Axios.post('http://localhost:3001/create', {
@@ -21,12 +21,33 @@ function App() {
     })
   }
 
-  const showProduct = () =>{
+  const showProduct = () => {
     Axios.get('http://localhost:3001/findproduct').then((res) => {
-      
+
       setProductList(res.data)
     })
     //console.log(process.env.REACT_APP_SHOW_PRODUCT)
+  }
+
+  const updateProduct = (id) => {
+
+    Axios.put('http://localhost:3001/updateproduct', {
+      id: id,
+      productName: productName,
+      price: price,
+      quatity: quatity
+    }).then(()=>{
+      showProduct()
+    })
+
+  }
+
+  const deleteProduct = (id) => {
+
+    Axios.delete(`http://localhost:3001/delete/${id}`).then(()=>{
+      showProduct()
+    })
+
   }
 
 
@@ -74,6 +95,41 @@ function App() {
                     <p className="card-text">Price: {val.price}</p>
                     <p className="card-text">Quantity: {val.quantity}</p>
                   </div>
+                  <hr />
+                  <form action="">
+                  <div className="row">
+                    <div className="col-md-2">
+                      <input type="text" className="form-control" placeholder="Enter name"
+                        onChange={(event) => {
+                          setProductName(event.target.value)
+                        }} required></input>
+                    </div>
+                    <div className="col-md-2">
+                      <input type="text" className="form-control" placeholder="Enter price"
+                        onChange={(event) => {
+                          setPrice(event.target.value)
+                        }} required></input>
+                    </div>
+                    <div className="col-md-2">
+                      <input type="text" className="form-control" placeholder="Enter quatity"
+                        onChange={(event) => {
+                          setQuatity(event.target.value)
+                        }} required></input>
+                    </div>
+                    <div className="col-md-2 offset-md-2">
+                      <button className="btn btn-warning" onClick={() => updateProduct(val._id)}> Change </button>
+                    </div>
+                    
+
+                    <div className="col-md-1">
+                      <button className="btn btn-danger" onClick={() => deleteProduct(val._id)}> Delete </button>
+                    </div>
+
+
+                  </div>
+                  </form>
+
+
                 </div>
               )
             })

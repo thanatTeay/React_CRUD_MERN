@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv')
 const cors = require('cors');
+const path = require('path')
 const app = express()
 
 dotenv.config()
@@ -85,6 +86,14 @@ app.delete("/delete/:id", async(req,res)=>{
     await ProductsModel.findByIdAndRemove(id).exec()
     res.send("Delete!!!")
 })
+
+if(process.env.NODE_ENV === 'production')
+{
+    app.use(express.static('client/build'))
+    app.get('*', (req,res)=>{
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+    })
+}
 
 
 app.listen(process.env.DB_PORT || 3001, () => 

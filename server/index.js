@@ -9,12 +9,26 @@ const app = express()
 dotenv.config()
 
 const ProductsModel = require('./model/Products')
-//const FindModel = require('./model/FindData')
+//const FindModel = require('../client/build')
 
 app.use(cors())
 app.use(express.json());
 
+/*if(process.env.NODE_ENV === 'production')
+{
+    app.use(express.static('client/build'))
+    app.get('*', (req,res)=>{
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+    })
+}*/
 
+if(process.env.NODE_ENV === 'production')
+{
+    app.use(express.static(path.join(__dirname,'../client/build')))
+    app.get('*',(req,res)=>{
+        res.sendFile(path.join(__dirname, '../client/build/index.html'))
+    })
+}
 
 /*mongoose.connect("mongodb+srv://Thanat2208:thegame901@crud.qooys.mongodb.net/Products?retryWrites=true&w=majority", {
     useNewUrlParser: true,
@@ -87,13 +101,7 @@ app.delete("/delete/:id", async(req,res)=>{
     res.send("Delete!!!")
 })
 
-if(process.env.NODE_ENV === 'production')
-{
-    app.use(express.static('client/build'))
-    app.get('*', (req,res)=>{
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-    })
-}
+
 
 
 app.listen(process.env.DB_PORT || 3001, () => 

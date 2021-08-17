@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const dotenv = require('dotenv')
 const cors = require('cors');
 const app = express()
 
+dotenv.config()
+
 const ProductsModel = require('./model/Products')
-const FindAll = require('./model/FindData')
+//const FindModel = require('./model/FindData')
 
 app.use(cors())
 app.use(express.json());
@@ -16,7 +19,7 @@ app.use(express.json());
     useNewUrlParser: true,
     useCreateIndex: true
 });*/
-mongoose.connect("mongodb+srv://Thanat2208:thegame901@crud.qooys.mongodb.net/Products?retryWrites=true&w=majority", {
+mongoose.connect(process.env.DB_CONNECT, {
     useNewUrlParser: true,
     useCreateIndex: true
 });
@@ -34,8 +37,8 @@ app.post('/create', async (req,res) => {
 
     const product = new ProductsModel({
         productName: productName,
-        quantity: price,
-        price: quatity
+        price: price,
+        quantity: quatity
     })
     try{
         await product.save();
@@ -45,8 +48,18 @@ app.post('/create', async (req,res) => {
     }
 })
 
+app.get('/findproduct',async (req,res) => {
+    await ProductsModel.find((err,data) => {
+        if(err){
+            console.log(err)
+        }else{
+            res.send(data)
+        }
+    })
+})
 
-app.listen(3001, () => 
+
+app.listen(process.env.DB_PORT, () => 
 {
-    console.log("Server running on port 3001")
+    console.log("Server running on port ", process.env.DB_PORT)
 })
